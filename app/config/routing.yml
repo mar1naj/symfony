@@ -1,0 +1,4 @@
+idgcandidate:
+    resource: "@IdgcandidateBundle/Resources/config/routing.yml"
+    prefix:   /
+

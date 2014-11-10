@@ -1,26 +1,27 @@
 {# src/Acme/LibraryBundle/Resources/views/Book/add.html.twig #}
 
 <h1>Books</h1>
-<ul>
-<li class='headers'>Title</li><li class='headers'>ISBN</li><li class='headers'>Author</li><li class='headers'>Language</li>
-<ul>
+<table class="table">
+<tr>
+<td class='headers'>Title</td><td class='headers'>ISBN</td><td class='headers'>Author</td><td class='headers'>Language</td>
+</tr>
     {% for book in books %}
-	<ul>
-        <li>{{ book.title|e }}</li>
-		<li>{{ book.isbn|e }}</li>
-		<li>{{ book.author|e }}</li>
-		<li>{{ book.language|e }}</li>
-		<li>
+	<tr>
+        <td>{{ book.title|e }}</td>
+		<td>{{ book.isbn|e }}</td>
+		<td>{{ book.author|e }}</td>
+		<td>{{ book.language|e }}</td>
+		<td>
 			<div id="trash-{{ book.id }}">
 				<a class="ajax-trash preventdefault" onClick="trash(this, '{{ path('book_trash', { 'id': book.id }) }}', '{{asset('images/waiting.gif')}}')" href="#">Delete</a>
 			</div>
-		</li>
+		</td>
 
-	</ul>
+	</tr>
 	{% else %}
-	   <li><h2> There are no saved books!</h2></li>
+	 <tr>  <td><h2> There are no saved books!</h2></td></tr>
     {% endfor %}
-</ul>
+</table>
 <a href="{{path('book_add')}}">Add Books</a> |
 <a href="{{path('author_add')}}">Authors</a> |
 <a href="{{path('language_add')}}">Languages</a>

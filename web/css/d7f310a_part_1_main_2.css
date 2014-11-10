@@ -1,0 +1,14 @@
+ul{
+	border:groove, #999;
+}
+li{
+	display:inline;
+	padding:10px;
+}
+
+
+.headers{
+	font-weight: bold;
+	font-size:12px;
+	display:inline;
+}

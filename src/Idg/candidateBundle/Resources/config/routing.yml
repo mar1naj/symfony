@@ -29,3 +29,8 @@ book_add:
 book_save:
     path:     /book/save
     defaults: { _controller: IdgcandidateBundle:Librarian:savebook }
+
+book_trash:
+    path:     /book/trash/{id}
+    methods: [POST]
+    defaults: { _controller: IdgcandidateBundle:Librarian:trashbook }

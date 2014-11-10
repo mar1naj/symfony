@@ -116,6 +116,20 @@ class LibrarianController extends Controller
     }
 	
 	
+	public function trashbookAction(Request $request, $id){
+		$book = BookQuery::create()->findPk($id);
+		$book->delete();
+
+         $json=json_encode(array(
+			'title' => $book->getTitle()
+	    ));
+	    $response = new Response($json);
+	    $response->headers->set('Content-Type','application/json');
+	    return $response;
+        
+	}
+	
+	
 }
 
 ?>

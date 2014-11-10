@@ -13,24 +13,24 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use Idg\candidateBundle\Model\Author;
-use Idg\candidateBundle\Model\AuthorPeer;
-use Idg\candidateBundle\Model\AuthorQuery;
 use Idg\candidateBundle\Model\Book;
 use Idg\candidateBundle\Model\BookQuery;
+use Idg\candidateBundle\Model\Language;
+use Idg\candidateBundle\Model\LanguagePeer;
+use Idg\candidateBundle\Model\LanguageQuery;
 
-abstract class BaseAuthor extends BaseObject implements Persistent
+abstract class BaseLanguage extends BaseObject implements Persistent
 {
     /**
      * Peer class name
      */
-    const PEER = 'Idg\\candidateBundle\\Model\\AuthorPeer';
+    const PEER = 'Idg\\candidateBundle\\Model\\LanguagePeer';
 
     /**
      * The Peer class.
      * Instance provides a convenient way of calling static methods on a class
      * that calling code may not be able to identify.
-     * @var        AuthorPeer
+     * @var        LanguagePeer
      */
     protected static $peer;
 
@@ -47,16 +47,16 @@ abstract class BaseAuthor extends BaseObject implements Persistent
     protected $id;
 
     /**
-     * The value for the first_name field.
+     * The value for the name_en field.
      * @var        string
      */
-    protected $first_name;
+    protected $name_en;
 
     /**
-     * The value for the last_name field.
+     * The value for the name_or field.
      * @var        string
      */
-    protected $last_name;
+    protected $name_or;
 
     /**
      * @var        PropelObjectCollection|Book[] Collection to store aggregation of Book objects.
@@ -102,32 +102,32 @@ abstract class BaseAuthor extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [first_name] column value.
+     * Get the [name_en] column value.
      *
      * @return string
      */
-    public function getFirstName()
+    public function getNameEn()
     {
 
-        return $this->first_name;
+        return $this->name_en;
     }
 
     /**
-     * Get the [last_name] column value.
+     * Get the [name_or] column value.
      *
      * @return string
      */
-    public function getLastName()
+    public function getNameOr()
     {
 
-        return $this->last_name;
+        return $this->name_or;
     }
 
     /**
      * Set the value of [id] column.
      *
      * @param  int $v new value
-     * @return Author The current object (for fluent API support)
+     * @return Language The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -137,7 +137,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[] = AuthorPeer::ID;
+            $this->modifiedColumns[] = LanguagePeer::ID;
         }
 
 
@@ -145,46 +145,46 @@ abstract class BaseAuthor extends BaseObject implements Persistent
     } // setId()
 
     /**
-     * Set the value of [first_name] column.
+     * Set the value of [name_en] column.
      *
      * @param  string $v new value
-     * @return Author The current object (for fluent API support)
+     * @return Language The current object (for fluent API support)
      */
-    public function setFirstName($v)
+    public function setNameEn($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->first_name !== $v) {
-            $this->first_name = $v;
-            $this->modifiedColumns[] = AuthorPeer::FIRST_NAME;
+        if ($this->name_en !== $v) {
+            $this->name_en = $v;
+            $this->modifiedColumns[] = LanguagePeer::NAME_EN;
         }
 
 
         return $this;
-    } // setFirstName()
+    } // setNameEn()
 
     /**
-     * Set the value of [last_name] column.
+     * Set the value of [name_or] column.
      *
      * @param  string $v new value
-     * @return Author The current object (for fluent API support)
+     * @return Language The current object (for fluent API support)
      */
-    public function setLastName($v)
+    public function setNameOr($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->last_name !== $v) {
-            $this->last_name = $v;
-            $this->modifiedColumns[] = AuthorPeer::LAST_NAME;
+        if ($this->name_or !== $v) {
+            $this->name_or = $v;
+            $this->modifiedColumns[] = LanguagePeer::NAME_OR;
         }
 
 
         return $this;
-    } // setLastName()
+    } // setNameOr()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -219,8 +219,8 @@ abstract class BaseAuthor extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->first_name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->last_name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->name_en = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->name_or = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -230,10 +230,10 @@ abstract class BaseAuthor extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 3; // 3 = AuthorPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = LanguagePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException("Error populating Author object", $e);
+            throw new PropelException("Error populating Language object", $e);
         }
     }
 
@@ -276,13 +276,13 @@ abstract class BaseAuthor extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(AuthorPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(LanguagePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $stmt = AuthorPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
+        $stmt = LanguagePeer::doSelectStmt($this->buildPkeyCriteria(), $con);
         $row = $stmt->fetch(PDO::FETCH_NUM);
         $stmt->closeCursor();
         if (!$row) {
@@ -314,12 +314,12 @@ abstract class BaseAuthor extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(AuthorPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(LanguagePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
         try {
-            $deleteQuery = AuthorQuery::create()
+            $deleteQuery = LanguageQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -357,7 +357,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(AuthorPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(LanguagePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
@@ -377,7 +377,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                AuthorPeer::addInstanceToPool($this);
+                LanguagePeer::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -456,24 +456,24 @@ abstract class BaseAuthor extends BaseObject implements Persistent
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[] = AuthorPeer::ID;
+        $this->modifiedColumns[] = LanguagePeer::ID;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . AuthorPeer::ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . LanguagePeer::ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(AuthorPeer::ID)) {
+        if ($this->isColumnModified(LanguagePeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`id`';
         }
-        if ($this->isColumnModified(AuthorPeer::FIRST_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`first_name`';
+        if ($this->isColumnModified(LanguagePeer::NAME_EN)) {
+            $modifiedColumns[':p' . $index++]  = '`name_en`';
         }
-        if ($this->isColumnModified(AuthorPeer::LAST_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`last_name`';
+        if ($this->isColumnModified(LanguagePeer::NAME_OR)) {
+            $modifiedColumns[':p' . $index++]  = '`name_or`';
         }
 
         $sql = sprintf(
-            'INSERT INTO `author` (%s) VALUES (%s)',
+            'INSERT INTO `language` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -485,11 +485,11 @@ abstract class BaseAuthor extends BaseObject implements Persistent
                     case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`first_name`':
-                        $stmt->bindValue($identifier, $this->first_name, PDO::PARAM_STR);
+                    case '`name_en`':
+                        $stmt->bindValue($identifier, $this->name_en, PDO::PARAM_STR);
                         break;
-                    case '`last_name`':
-                        $stmt->bindValue($identifier, $this->last_name, PDO::PARAM_STR);
+                    case '`name_or`':
+                        $stmt->bindValue($identifier, $this->name_or, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -585,7 +585,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
             $failureMap = array();
 
 
-            if (($retval = AuthorPeer::doValidate($this, $columns)) !== true) {
+            if (($retval = LanguagePeer::doValidate($this, $columns)) !== true) {
                 $failureMap = array_merge($failureMap, $retval);
             }
 
@@ -617,7 +617,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
      */
     public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = AuthorPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = LanguagePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -637,10 +637,10 @@ abstract class BaseAuthor extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getFirstName();
+                return $this->getNameEn();
                 break;
             case 2:
-                return $this->getLastName();
+                return $this->getNameOr();
                 break;
             default:
                 return null;
@@ -665,15 +665,15 @@ abstract class BaseAuthor extends BaseObject implements Persistent
      */
     public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['Author'][$this->getPrimaryKey()])) {
+        if (isset($alreadyDumpedObjects['Language'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Author'][$this->getPrimaryKey()] = true;
-        $keys = AuthorPeer::getFieldNames($keyType);
+        $alreadyDumpedObjects['Language'][$this->getPrimaryKey()] = true;
+        $keys = LanguagePeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getFirstName(),
-            $keys[2] => $this->getLastName(),
+            $keys[1] => $this->getNameEn(),
+            $keys[2] => $this->getNameOr(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -702,7 +702,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
      */
     public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = AuthorPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = LanguagePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 
         $this->setByPosition($pos, $value);
     }
@@ -722,10 +722,10 @@ abstract class BaseAuthor extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setFirstName($value);
+                $this->setNameEn($value);
                 break;
             case 2:
-                $this->setLastName($value);
+                $this->setNameOr($value);
                 break;
         } // switch()
     }
@@ -749,11 +749,11 @@ abstract class BaseAuthor extends BaseObject implements Persistent
      */
     public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
     {
-        $keys = AuthorPeer::getFieldNames($keyType);
+        $keys = LanguagePeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setFirstName($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setLastName($arr[$keys[2]]);
+        if (array_key_exists($keys[1], $arr)) $this->setNameEn($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setNameOr($arr[$keys[2]]);
     }
 
     /**
@@ -763,11 +763,11 @@ abstract class BaseAuthor extends BaseObject implements Persistent
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(AuthorPeer::DATABASE_NAME);
+        $criteria = new Criteria(LanguagePeer::DATABASE_NAME);
 
-        if ($this->isColumnModified(AuthorPeer::ID)) $criteria->add(AuthorPeer::ID, $this->id);
-        if ($this->isColumnModified(AuthorPeer::FIRST_NAME)) $criteria->add(AuthorPeer::FIRST_NAME, $this->first_name);
-        if ($this->isColumnModified(AuthorPeer::LAST_NAME)) $criteria->add(AuthorPeer::LAST_NAME, $this->last_name);
+        if ($this->isColumnModified(LanguagePeer::ID)) $criteria->add(LanguagePeer::ID, $this->id);
+        if ($this->isColumnModified(LanguagePeer::NAME_EN)) $criteria->add(LanguagePeer::NAME_EN, $this->name_en);
+        if ($this->isColumnModified(LanguagePeer::NAME_OR)) $criteria->add(LanguagePeer::NAME_OR, $this->name_or);
 
         return $criteria;
     }
@@ -782,8 +782,8 @@ abstract class BaseAuthor extends BaseObject implements Persistent
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(AuthorPeer::DATABASE_NAME);
-        $criteria->add(AuthorPeer::ID, $this->id);
+        $criteria = new Criteria(LanguagePeer::DATABASE_NAME);
+        $criteria->add(LanguagePeer::ID, $this->id);
 
         return $criteria;
     }
@@ -824,15 +824,15 @@ abstract class BaseAuthor extends BaseObject implements Persistent
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of Author (or compatible) type.
+     * @param object $copyObj An object of Language (or compatible) type.
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setFirstName($this->getFirstName());
-        $copyObj->setLastName($this->getLastName());
+        $copyObj->setNameEn($this->getNameEn());
+        $copyObj->setNameOr($this->getNameOr());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -866,7 +866,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
      * objects.
      *
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return Author Clone of current object.
+     * @return Language Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -886,12 +886,12 @@ abstract class BaseAuthor extends BaseObject implements Persistent
      * same instance for all member of this class. The method could therefore
      * be static, but this would prevent one from overriding the behavior.
      *
-     * @return AuthorPeer
+     * @return LanguagePeer
      */
     public function getPeer()
     {
         if (self::$peer === null) {
-            self::$peer = new AuthorPeer();
+            self::$peer = new LanguagePeer();
         }
 
         return self::$peer;
@@ -919,7 +919,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
-     * @return Author The current object (for fluent API support)
+     * @return Language The current object (for fluent API support)
      * @see        addBooks()
      */
     public function clearBooks()
@@ -967,7 +967,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this Author is new, it will return
+     * If this Language is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
@@ -984,7 +984,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
                 $this->initBooks();
             } else {
                 $collBooks = BookQuery::create(null, $criteria)
-                    ->filterByAuthor($this)
+                    ->filterByLanguage($this)
                     ->find($con);
                 if (null !== $criteria) {
                     if (false !== $this->collBooksPartial && count($collBooks)) {
@@ -1028,7 +1028,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
      *
      * @param PropelCollection $books A Propel collection.
      * @param PropelPDO $con Optional connection object
-     * @return Author The current object (for fluent API support)
+     * @return Language The current object (for fluent API support)
      */
     public function setBooks(PropelCollection $books, PropelPDO $con = null)
     {
@@ -1038,7 +1038,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
         $this->booksScheduledForDeletion = $booksToDelete;
 
         foreach ($booksToDelete as $bookRemoved) {
-            $bookRemoved->setAuthor(null);
+            $bookRemoved->setLanguage(null);
         }
 
         $this->collBooks = null;
@@ -1078,7 +1078,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
             }
 
             return $query
-                ->filterByAuthor($this)
+                ->filterByLanguage($this)
                 ->count($con);
         }
 
@@ -1090,7 +1090,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
      * through the Book foreign key attribute.
      *
      * @param    Book $l Book
-     * @return Author The current object (for fluent API support)
+     * @return Language The current object (for fluent API support)
      */
     public function addBook(Book $l)
     {
@@ -1116,12 +1116,12 @@ abstract class BaseAuthor extends BaseObject implements Persistent
     protected function doAddBook($book)
     {
         $this->collBooks[]= $book;
-        $book->setAuthor($this);
+        $book->setLanguage($this);
     }
 
     /**
      * @param	Book $book The book object to remove.
-     * @return Author The current object (for fluent API support)
+     * @return Language The current object (for fluent API support)
      */
     public function removeBook($book)
     {
@@ -1132,7 +1132,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
                 $this->booksScheduledForDeletion->clear();
             }
             $this->booksScheduledForDeletion[]= $book;
-            $book->setAuthor(null);
+            $book->setLanguage(null);
         }
 
         return $this;
@@ -1142,23 +1142,23 @@ abstract class BaseAuthor extends BaseObject implements Persistent
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Author is new, it will return
-     * an empty collection; or if this Author has previously
+     * Otherwise if this Language is new, it will return
+     * an empty collection; or if this Language has previously
      * been saved, it will retrieve related Books from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Author.
+     * actually need in Language.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return PropelObjectCollection|Book[] List of Book objects
      */
-    public function getBooksJoinLanguage($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getBooksJoinAuthor($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         $query = BookQuery::create(null, $criteria);
-        $query->joinWith('Language', $join_behavior);
+        $query->joinWith('Author', $join_behavior);
 
         return $this->getBooks($query, $con);
     }
@@ -1169,8 +1169,8 @@ abstract class BaseAuthor extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
-        $this->first_name = null;
-        $this->last_name = null;
+        $this->name_en = null;
+        $this->name_or = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -1215,7 +1215,7 @@ abstract class BaseAuthor extends BaseObject implements Persistent
      */
     public function __toString()
     {
-        return (string) $this->exportTo(AuthorPeer::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(LanguagePeer::DEFAULT_STRING_FORMAT);
     }
 
     /**

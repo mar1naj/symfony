@@ -15,8 +15,10 @@ CREATE TABLE `book`
     `title` VARCHAR(100),
     `ISBN` VARCHAR(20),
     `author_id` INTEGER,
+    `language_id` INTEGER,
     PRIMARY KEY (`id`),
-    INDEX `book_FI_1` (`author_id`)
+    INDEX `book_FI_1` (`language_id`),
+    INDEX `book_FI_2` (`author_id`)
 ) ENGINE=MyISAM;
 
 -- ---------------------------------------------------------------------
@@ -30,6 +32,20 @@ CREATE TABLE `author`
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `first_name` VARCHAR(100),
     `last_name` VARCHAR(100),
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM;
+
+-- ---------------------------------------------------------------------
+-- language
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `language`;
+
+CREATE TABLE `language`
+(
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name_en` VARCHAR(100),
+    `name_or` VARCHAR(100),
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
 

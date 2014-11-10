@@ -16,6 +16,8 @@ use Idg\candidateBundle\Model\AuthorQuery;
 use Idg\candidateBundle\Model\Book;
 use Idg\candidateBundle\Model\BookPeer;
 use Idg\candidateBundle\Model\BookQuery;
+use Idg\candidateBundle\Model\Language;
+use Idg\candidateBundle\Model\LanguageQuery;
 
 abstract class BaseBook extends BaseObject implements Persistent
 {
@@ -61,6 +63,17 @@ abstract class BaseBook extends BaseObject implements Persistent
      * @var        int
      */
     protected $author_id;
+
+    /**
+     * The value for the language_id field.
+     * @var        int
+     */
+    protected $language_id;
+
+    /**
+     * @var        Language
+     */
+    protected $aLanguage;
 
     /**
      * @var        Author
@@ -129,6 +142,17 @@ abstract class BaseBook extends BaseObject implements Persistent
     {
 
         return $this->author_id;
+    }
+
+    /**
+     * Get the [language_id] column value.
+     *
+     * @return int
+     */
+    public function getLanguageId()
+    {
+
+        return $this->language_id;
     }
 
     /**
@@ -220,6 +244,31 @@ abstract class BaseBook extends BaseObject implements Persistent
     } // setAuthorId()
 
     /**
+     * Set the value of [language_id] column.
+     *
+     * @param  int $v new value
+     * @return Book The current object (for fluent API support)
+     */
+    public function setLanguageId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->language_id !== $v) {
+            $this->language_id = $v;
+            $this->modifiedColumns[] = BookPeer::LANGUAGE_ID;
+        }
+
+        if ($this->aLanguage !== null && $this->aLanguage->getId() !== $v) {
+            $this->aLanguage = null;
+        }
+
+
+        return $this;
+    } // setLanguageId()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -255,6 +304,7 @@ abstract class BaseBook extends BaseObject implements Persistent
             $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
             $this->isbn = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->author_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
+            $this->language_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -264,7 +314,7 @@ abstract class BaseBook extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 4; // 4 = BookPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = BookPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Book object", $e);
@@ -289,6 +339,9 @@ abstract class BaseBook extends BaseObject implements Persistent
 
         if ($this->aAuthor !== null && $this->author_id !== $this->aAuthor->getId()) {
             $this->aAuthor = null;
+        }
+        if ($this->aLanguage !== null && $this->language_id !== $this->aLanguage->getId()) {
+            $this->aLanguage = null;
         }
     } // ensureConsistency
 
@@ -329,6 +382,7 @@ abstract class BaseBook extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aLanguage = null;
             $this->aAuthor = null;
         } // if (deep)
     }
@@ -448,6 +502,13 @@ abstract class BaseBook extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aLanguage !== null) {
+                if ($this->aLanguage->isModified() || $this->aLanguage->isNew()) {
+                    $affectedRows += $this->aLanguage->save($con);
+                }
+                $this->setLanguage($this->aLanguage);
+            }
+
             if ($this->aAuthor !== null) {
                 if ($this->aAuthor->isModified() || $this->aAuthor->isNew()) {
                     $affectedRows += $this->aAuthor->save($con);
@@ -504,6 +565,9 @@ abstract class BaseBook extends BaseObject implements Persistent
         if ($this->isColumnModified(BookPeer::AUTHOR_ID)) {
             $modifiedColumns[':p' . $index++]  = '`author_id`';
         }
+        if ($this->isColumnModified(BookPeer::LANGUAGE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`language_id`';
+        }
 
         $sql = sprintf(
             'INSERT INTO `book` (%s) VALUES (%s)',
@@ -526,6 +590,9 @@ abstract class BaseBook extends BaseObject implements Persistent
                         break;
                     case '`author_id`':
                         $stmt->bindValue($identifier, $this->author_id, PDO::PARAM_INT);
+                        break;
+                    case '`language_id`':
+                        $stmt->bindValue($identifier, $this->language_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -626,6 +693,12 @@ abstract class BaseBook extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aLanguage !== null) {
+                if (!$this->aLanguage->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aLanguage->getValidationFailures());
+                }
+            }
+
             if ($this->aAuthor !== null) {
                 if (!$this->aAuthor->validate($columns)) {
                     $failureMap = array_merge($failureMap, $this->aAuthor->getValidationFailures());
@@ -685,6 +758,9 @@ abstract class BaseBook extends BaseObject implements Persistent
             case 3:
                 return $this->getAuthorId();
                 break;
+            case 4:
+                return $this->getLanguageId();
+                break;
             default:
                 return null;
                 break;
@@ -718,6 +794,7 @@ abstract class BaseBook extends BaseObject implements Persistent
             $keys[1] => $this->getTitle(),
             $keys[2] => $this->getIsbn(),
             $keys[3] => $this->getAuthorId(),
+            $keys[4] => $this->getLanguageId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -725,6 +802,9 @@ abstract class BaseBook extends BaseObject implements Persistent
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->aLanguage) {
+                $result['Language'] = $this->aLanguage->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->aAuthor) {
                 $result['Author'] = $this->aAuthor->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
@@ -774,6 +854,9 @@ abstract class BaseBook extends BaseObject implements Persistent
             case 3:
                 $this->setAuthorId($value);
                 break;
+            case 4:
+                $this->setLanguageId($value);
+                break;
         } // switch()
     }
 
@@ -802,6 +885,7 @@ abstract class BaseBook extends BaseObject implements Persistent
         if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setIsbn($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setAuthorId($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setLanguageId($arr[$keys[4]]);
     }
 
     /**
@@ -817,6 +901,7 @@ abstract class BaseBook extends BaseObject implements Persistent
         if ($this->isColumnModified(BookPeer::TITLE)) $criteria->add(BookPeer::TITLE, $this->title);
         if ($this->isColumnModified(BookPeer::ISBN)) $criteria->add(BookPeer::ISBN, $this->isbn);
         if ($this->isColumnModified(BookPeer::AUTHOR_ID)) $criteria->add(BookPeer::AUTHOR_ID, $this->author_id);
+        if ($this->isColumnModified(BookPeer::LANGUAGE_ID)) $criteria->add(BookPeer::LANGUAGE_ID, $this->language_id);
 
         return $criteria;
     }
@@ -883,6 +968,7 @@ abstract class BaseBook extends BaseObject implements Persistent
         $copyObj->setTitle($this->getTitle());
         $copyObj->setIsbn($this->getIsbn());
         $copyObj->setAuthorId($this->getAuthorId());
+        $copyObj->setLanguageId($this->getLanguageId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -939,6 +1025,58 @@ abstract class BaseBook extends BaseObject implements Persistent
         }
 
         return self::$peer;
+    }
+
+    /**
+     * Declares an association between this object and a Language object.
+     *
+     * @param                  Language $v
+     * @return Book The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setLanguage(Language $v = null)
+    {
+        if ($v === null) {
+            $this->setLanguageId(NULL);
+        } else {
+            $this->setLanguageId($v->getId());
+        }
+
+        $this->aLanguage = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Language object, it will not be re-added.
+        if ($v !== null) {
+            $v->addBook($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Language object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return Language The associated Language object.
+     * @throws PropelException
+     */
+    public function getLanguage(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aLanguage === null && ($this->language_id !== null) && $doQuery) {
+            $this->aLanguage = LanguageQuery::create()->findPk($this->language_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aLanguage->addBooks($this);
+             */
+        }
+
+        return $this->aLanguage;
     }
 
     /**
@@ -1002,6 +1140,7 @@ abstract class BaseBook extends BaseObject implements Persistent
         $this->title = null;
         $this->isbn = null;
         $this->author_id = null;
+        $this->language_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -1024,6 +1163,9 @@ abstract class BaseBook extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->aLanguage instanceof Persistent) {
+              $this->aLanguage->clearAllReferences($deep);
+            }
             if ($this->aAuthor instanceof Persistent) {
               $this->aAuthor->clearAllReferences($deep);
             }
@@ -1031,6 +1173,7 @@ abstract class BaseBook extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        $this->aLanguage = null;
         $this->aAuthor = null;
     }
 

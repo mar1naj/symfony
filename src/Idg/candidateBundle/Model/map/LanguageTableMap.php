@@ -7,7 +7,7 @@ use \TableMap;
 
 
 /**
- * This class defines the structure of the 'book' table.
+ * This class defines the structure of the 'language' table.
  *
  *
  *
@@ -18,13 +18,13 @@ use \TableMap;
  *
  * @package    propel.generator.src.Idg.candidateBundle.Model.map
  */
-class BookTableMap extends TableMap
+class LanguageTableMap extends TableMap
 {
 
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'src.Idg.candidateBundle.Model.map.BookTableMap';
+    const CLASS_NAME = 'src.Idg.candidateBundle.Model.map.LanguageTableMap';
 
     /**
      * Initialize the table attributes, columns and validators
@@ -36,18 +36,15 @@ class BookTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('book');
-        $this->setPhpName('Book');
-        $this->setClassname('Idg\\candidateBundle\\Model\\Book');
+        $this->setName('language');
+        $this->setPhpName('Language');
+        $this->setClassname('Idg\\candidateBundle\\Model\\Language');
         $this->setPackage('src.Idg.candidateBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('title', 'Title', 'VARCHAR', false, 100, null);
-        $this->getColumn('title', false)->setPrimaryString(true);
-        $this->addColumn('ISBN', 'Isbn', 'VARCHAR', false, 20, null);
-        $this->addForeignKey('author_id', 'AuthorId', 'INTEGER', 'author', 'id', false, null, null);
-        $this->addForeignKey('language_id', 'LanguageId', 'INTEGER', 'language', 'id', false, null, null);
+        $this->addColumn('name_en', 'NameEn', 'VARCHAR', false, 100, null);
+        $this->addColumn('name_or', 'NameOr', 'VARCHAR', false, 100, null);
         // validators
     } // initialize()
 
@@ -56,8 +53,7 @@ class BookTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Language', 'Idg\\candidateBundle\\Model\\Language', RelationMap::MANY_TO_ONE, array('language_id' => 'id', ), null, null);
-        $this->addRelation('Author', 'Idg\\candidateBundle\\Model\\Author', RelationMap::MANY_TO_ONE, array('author_id' => 'id', ), null, null);
+        $this->addRelation('Book', 'Idg\\candidateBundle\\Model\\Book', RelationMap::ONE_TO_MANY, array('id' => 'language_id', ), null, null, 'Books');
     } // buildRelations()
 
-} // BookTableMap
+} // LanguageTableMap

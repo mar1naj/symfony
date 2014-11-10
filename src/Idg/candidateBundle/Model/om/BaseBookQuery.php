@@ -16,21 +16,28 @@ use Idg\candidateBundle\Model\Author;
 use Idg\candidateBundle\Model\Book;
 use Idg\candidateBundle\Model\BookPeer;
 use Idg\candidateBundle\Model\BookQuery;
+use Idg\candidateBundle\Model\Language;
 
 /**
  * @method BookQuery orderById($order = Criteria::ASC) Order by the id column
  * @method BookQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method BookQuery orderByIsbn($order = Criteria::ASC) Order by the ISBN column
  * @method BookQuery orderByAuthorId($order = Criteria::ASC) Order by the author_id column
+ * @method BookQuery orderByLanguageId($order = Criteria::ASC) Order by the language_id column
  *
  * @method BookQuery groupById() Group by the id column
  * @method BookQuery groupByTitle() Group by the title column
  * @method BookQuery groupByIsbn() Group by the ISBN column
  * @method BookQuery groupByAuthorId() Group by the author_id column
+ * @method BookQuery groupByLanguageId() Group by the language_id column
  *
  * @method BookQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method BookQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method BookQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method BookQuery leftJoinLanguage($relationAlias = null) Adds a LEFT JOIN clause to the query using the Language relation
+ * @method BookQuery rightJoinLanguage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Language relation
+ * @method BookQuery innerJoinLanguage($relationAlias = null) Adds a INNER JOIN clause to the query using the Language relation
  *
  * @method BookQuery leftJoinAuthor($relationAlias = null) Adds a LEFT JOIN clause to the query using the Author relation
  * @method BookQuery rightJoinAuthor($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Author relation
@@ -42,11 +49,13 @@ use Idg\candidateBundle\Model\BookQuery;
  * @method Book findOneByTitle(string $title) Return the first Book filtered by the title column
  * @method Book findOneByIsbn(string $ISBN) Return the first Book filtered by the ISBN column
  * @method Book findOneByAuthorId(int $author_id) Return the first Book filtered by the author_id column
+ * @method Book findOneByLanguageId(int $language_id) Return the first Book filtered by the language_id column
  *
  * @method array findById(int $id) Return Book objects filtered by the id column
  * @method array findByTitle(string $title) Return Book objects filtered by the title column
  * @method array findByIsbn(string $ISBN) Return Book objects filtered by the ISBN column
  * @method array findByAuthorId(int $author_id) Return Book objects filtered by the author_id column
+ * @method array findByLanguageId(int $language_id) Return Book objects filtered by the language_id column
  */
 abstract class BaseBookQuery extends ModelCriteria
 {
@@ -152,7 +161,7 @@ abstract class BaseBookQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `title`, `ISBN`, `author_id` FROM `book` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `title`, `ISBN`, `author_id`, `language_id` FROM `book` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -383,6 +392,126 @@ abstract class BaseBookQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(BookPeer::AUTHOR_ID, $authorId, $comparison);
+    }
+
+    /**
+     * Filter the query on the language_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByLanguageId(1234); // WHERE language_id = 1234
+     * $query->filterByLanguageId(array(12, 34)); // WHERE language_id IN (12, 34)
+     * $query->filterByLanguageId(array('min' => 12)); // WHERE language_id >= 12
+     * $query->filterByLanguageId(array('max' => 12)); // WHERE language_id <= 12
+     * </code>
+     *
+     * @see       filterByLanguage()
+     *
+     * @param     mixed $languageId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return BookQuery The current query, for fluid interface
+     */
+    public function filterByLanguageId($languageId = null, $comparison = null)
+    {
+        if (is_array($languageId)) {
+            $useMinMax = false;
+            if (isset($languageId['min'])) {
+                $this->addUsingAlias(BookPeer::LANGUAGE_ID, $languageId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($languageId['max'])) {
+                $this->addUsingAlias(BookPeer::LANGUAGE_ID, $languageId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(BookPeer::LANGUAGE_ID, $languageId, $comparison);
+    }
+
+    /**
+     * Filter the query by a related Language object
+     *
+     * @param   Language|PropelObjectCollection $language The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 BookQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByLanguage($language, $comparison = null)
+    {
+        if ($language instanceof Language) {
+            return $this
+                ->addUsingAlias(BookPeer::LANGUAGE_ID, $language->getId(), $comparison);
+        } elseif ($language instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(BookPeer::LANGUAGE_ID, $language->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByLanguage() only accepts arguments of type Language or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Language relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return BookQuery The current query, for fluid interface
+     */
+    public function joinLanguage($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Language');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Language');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Language relation Language object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Idg\candidateBundle\Model\LanguageQuery A secondary query class using the current class as primary query
+     */
+    public function useLanguageQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinLanguage($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Language', '\Idg\candidateBundle\Model\LanguageQuery');
     }
 
     /**

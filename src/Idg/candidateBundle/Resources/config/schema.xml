@@ -6,6 +6,10 @@
         <column name="title" type="varchar" primaryString="1" size="100" />
         <column name="ISBN" type="varchar" size="20" />
         <column name="author_id" type="integer" />
+		<column name="language_id" type="integer" />
+		<foreign-key foreignTable="language">
+            <reference local="language_id" foreign="id" />
+        </foreign-key>
         <foreign-key foreignTable="author">
             <reference local="author_id" foreign="id" />
         </foreign-key>
@@ -15,6 +19,13 @@
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
         <column name="first_name" type="varchar" size="100" />
         <column name="last_name" type="varchar" size="100" />
+    </table>
+
+
+    <table name="language">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="name_en" type="varchar" size="100" />
+        <column name="name_or" type="varchar" size="100" />
     </table>
 
 </database>

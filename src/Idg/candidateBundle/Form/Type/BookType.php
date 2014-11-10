@@ -19,7 +19,16 @@ class BookType extends BaseAbstractType
     {
         $builder->add('title');
         $builder->add('isbn');
-        $builder->add('authorId');
-        $builder->add('languageId');
+		$builder->add('author', 'model', array(
+            'class' => 'Idg\candidateBundle\Model\Author',
+			'property' => 'last_name'
+        ));
+		$builder->add('language', 'model', array(
+            'class' => 'Idg\candidateBundle\Model\Language',
+			'property' => 'name_or'
+        ));
+
     }
+
+	
 }

@@ -1,3 +1,7 @@
+default:
+   path: /
+   defaults: { _controller: IdgcandidateBundle:Librarian:listbooks }
+
 author_add:
     path:     /author/add
     defaults: { _controller: IdgcandidateBundle:Librarian:addauthor }

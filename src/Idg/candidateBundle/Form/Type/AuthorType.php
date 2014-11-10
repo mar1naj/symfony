@@ -20,4 +20,5 @@ class AuthorType extends BaseAbstractType
         $builder->add('firstName');
         $builder->add('lastName');
     }
+	
 }

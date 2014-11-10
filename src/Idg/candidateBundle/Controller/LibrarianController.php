@@ -15,16 +15,30 @@ use Idg\candidateBundle\Form\Type\AuthorType;
 use Idg\candidateBundle\Model\Language;
 use Idg\candidateBundle\Form\Type\LanguageType;
 
+use Idg\candidateBundle\Model\BookQuery;
+use Idg\candidateBundle\Model\AuthorQuery;
+use Idg\candidateBundle\Model\LanguageQuery;
+
+
 class LibrarianController extends Controller
 {
 	
-    public function addauthorAction()
+    public function listbooksAction()
+	{
+		$books = BookQuery::create()->find();
+			return $this->render('IdgcandidateBundle:Book:listbooks.html.twig', array(
+            	'books' => $books,
+        	));
+		
+	}
+	public function addauthorAction()
     {
         $author = new Author();
         $form = $this->createForm(new AuthorType(), $author);
-
+		$authors = AuthorQuery::create()->find();
         return $this->render('IdgcandidateBundle:Author:add.html.twig', array(
             'form' => $form->createView(),
+			'authors' => $authors,
         ));
     }
 
@@ -33,9 +47,10 @@ class LibrarianController extends Controller
     {
         $language = new Language();
         $form = $this->createForm(new LanguageType(), $language);
-
+		$languages = LanguageQuery::create()->find();
         return $this->render('IdgcandidateBundle:Language:add.html.twig', array(
             'form' => $form->createView(),
+			'language' => $languages,
         ));
     }
 	
@@ -49,6 +64,42 @@ class LibrarianController extends Controller
         ));
     }
 	
+	
+	
+	public function saveauthorAction(Request $request)
+    {
+        $author = new Author();
+        $form = $this->createForm(new AuthorType(), $author);
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $author->save();
+				$this->get('session')->getFlashBag()->add(
+					'notice',
+					'Your changes were saved!'
+				);
+				return $this->redirect($this->generateUrl('author_add'));
+            }
+		return $this->redirect($this->generateUrl('author_add'));
+    }
+	
+	
+	public function savelanguageAction(Request $request)
+    {
+        $language = new Language();
+        $form = $this->createForm(new LanguageType(), $language);
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $language->save();
+				$this->get('session')->getFlashBag()->add(
+					'notice',
+					'Your changes were saved!'
+				);
+				return $this->redirect($this->generateUrl('language_add'));
+            }
+		return $this->redirect($this->generateUrl('langauge_add'));
+    }
 	
 	
 	public function savebookAction(Request $request)

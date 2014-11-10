@@ -1,7 +1,12 @@
 {# src/Acme/LibraryBundle/Resources/views/Language/add.html.twig #}
-
+{% for flashMessage in app.session.flashbag.get('notice') %}
+	<div class="flash-notice">
+		{{ flashMessage }}
+	</div>
+{% endfor %}
 <form action="{{ path('language_save') }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
 
     <input type="submit" />
 </form>
+<a href="{{ path('default')}}">Home</a>

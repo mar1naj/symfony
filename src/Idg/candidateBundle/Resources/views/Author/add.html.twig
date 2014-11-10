@@ -1,7 +1,19 @@
 {# src/Acme/LibraryBundle/Resources/views/Author/add.html.twig #}
+{% for flashMessage in app.session.flashbag.get('notice') %}
+	<div class="flash-notice">
+		{{ flashMessage }}
+	</div>
+{% endfor %}
+{% for author in authors %}
+	<li>{{ author.firstname|e }} {{ author.lastname|e }}</li>
+{% else %}
+   <h2> There are no saved authors!</h2>
+{% endfor %}
 
+<h2> Add New Author</h2>
 <form action="{{ path('author_save') }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
 
     <input type="submit" />
 </form>
+<a href="{{ path('default')}}">Home</a>

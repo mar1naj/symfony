@@ -1,0 +1,29 @@
+#src/Idg/candidateBundle/Resources/config/validation.yml
+
+
+Idg\candidateBundle\Model\Book:
+    properties:
+        title:
+            - NotBlank: { message: "Title cannot be empty!"}
+        isbn:
+            - NotBlank: { message: "ISBN cannot be empty"}
+            - Length: { min: 10 }
+
+
+
+Idg\candidateBundle\Model\Author:
+    properties:
+        first_name:
+            - NotBlank: { message: "First name is required!"}
+        last_name:
+            - NotBlank: { message: "Last name is required"}
+
+
+
+Idg\candidateBundle\Model\Language:
+    properties:
+        name_en:
+            - NotBlank: { message: "All fields are required"}
+        name_or:
+            - NotBlank: { message: "All fields are required"}
+

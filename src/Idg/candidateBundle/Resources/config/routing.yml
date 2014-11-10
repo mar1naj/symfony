@@ -1,3 +1,27 @@
-idgcandidate_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: IdgcandidateBundle:Default:index }
+author_add:
+    path:     /author/add
+    defaults: { _controller: IdgcandidateBundle:Librarian:addauthor }
+
+author_save:
+    path:     /author/save
+    defaults: { _controller: IdgcandidateBundle:Librarian:saveauthor }
+
+
+language_add:
+    path:     /language/add
+    defaults: { _controller: IdgcandidateBundle:Librarian:addlanguage }
+
+
+language_save:
+    path:     /language/save
+    defaults: { _controller: IdgcandidateBundle:Librarian:savelanguage }
+
+
+book_add:
+    path:     /book/add
+    defaults: { _controller: IdgcandidateBundle:Librarian:addbook }
+
+
+book_save:
+    path:     /book/save
+    defaults: { _controller: IdgcandidateBundle:Librarian:savebook }

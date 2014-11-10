@@ -1,0 +1,7 @@
+{# src/Acme/LibraryBundle/Resources/views/Book/add.html.twig #}
+
+<form action="{{ path('book_save') }}" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
+
+    <input type="submit" />
+</form>
